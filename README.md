@@ -15,7 +15,7 @@ Identity
 ⚙️ Como executar o projeto
 📌 Pré-requisitos
 
-.NET SDK (versão utilizada no projeto)
+.NET SDK (10.0)
 
 SQL Server (Express ou Developer)
 
@@ -65,3 +65,5 @@ Ou pressione F5 no Visual Studio.
 
 Acesse a URL exibida no terminal (ex: https://localhost:xxxx
 ).
+
+O programa já vai criar um usuario Admin para você já conseguir acessar
