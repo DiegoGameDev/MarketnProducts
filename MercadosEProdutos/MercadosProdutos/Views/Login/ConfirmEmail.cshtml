@@ -1,0 +1,21 @@
+@{
+    ViewData["Title"] = "Email Confirmado";
+}
+
+<div style="display:flex; justify-content:center; align-items:center; height:70vh;">
+    <div style="text-align:center; padding:30px; border:1px solid #ddd; border-radius:8px; width:400px;">
+        
+        <h2 style="margin-bottom:20px;">Email confirmado com sucesso ✅</h2>
+
+        <p style="margin-bottom:25px;">
+            Sua conta foi ativada. Agora você já pode acessar o sistema.
+        </p>
+
+        <a asp-controller="Home"
+           asp-action="Index"
+           style="padding:10px 20px; background-color:#007bff; color:white; text-decoration:none; border-radius:5px;">
+            Continuar
+        </a>
+
+    </div>
+</div>

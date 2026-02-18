@@ -1,0 +1,47 @@
+@using DBModel
+@model IEnumerable<Market>
+
+@{
+    ViewData["Title"] = "Lista de Mercados";
+}
+
+<h2>Lista de Mercados</h2>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Novo Mercado</a>
+</p>
+
+<table class="table table-striped table-bordered">
+    <thead>
+        <tr>
+            <th>Nome</th>
+            <th>Local</th>
+            <th>Contato</th>
+            <th>CNPJ</th>
+            <th style="width:150px;">Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Any())
+        {
+            foreach (var market in Model)
+            {
+                <tr>
+                    <td>@market.marketName</td>
+                    <td>@market.marketLocal</td>
+                    <td>@market.phoneOrEmailContact</td>
+                    <td>@market.cnpj</td>
+                    <td>
+                        <a asp-action="MarketView" asp-controller="MarketPlace" asp-route-id="@market.ID" class="btn btn-sm btn-warning">Acessar</a>
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="5" class="text-center">Nenhum mercado cadastrado.</td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,57 @@
+@using MarketView
+@model MarketViewModel
+
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<div class="container mt-5">
+    <!-- Título da loja -->
+    <h1 class="text-center mb-2">@Model.Name</h1>
+
+    <!-- Localização -->
+    <p class="text-center text-muted">
+        <span>@Model.Location</span>
+    </p>
+
+    <hr />
+
+    <!-- Lista de produtos -->
+    <div class="row">
+        @if (Model.Products != null && Model.Products.Any())
+        {
+            foreach (var product in Model.Products)
+            {
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 shadow-sm">
+                        <img src="@product.ImageUrl" class="card-img-top" alt="@product.Name" />
+                        <div class="card-body">
+                            <h5 class="card-title">@product.Name</h5>
+                            <p class="card-text">Preço: @product.Price.ToString("C")</p>
+                        </div>
+                        <div class="card-footer text-center">
+                            <button class="btn btn-primary">Comprar</button>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <p class="text-center text-muted">Nenhum produto disponível no momento.</p>
+        }
+    </div>
+</div>
+
+<style>
+    /* Ajustes rápidos para centralizar título e espaçamento */
+    h1.text-center {
+        font-weight: bold;
+        font-size: 2.5rem;
+    }
+
+    .card-img-top {
+        height: 200px;
+        object-fit: cover;
+    }
+</style>

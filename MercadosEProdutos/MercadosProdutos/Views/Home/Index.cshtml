@@ -1,0 +1,15 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+@if (TempData["SucessoMSG"] != null){
+  <div class="alert alert-primary" role="alert">
+    <button type="button" class="btn btn-danger btn-sm close-alert" aria-label="Close">X</button>
+    @TempData["SucessoMensagem"]
+  </div>
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+</div>

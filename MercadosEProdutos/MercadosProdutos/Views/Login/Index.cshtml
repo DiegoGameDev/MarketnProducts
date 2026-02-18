@@ -1,0 +1,46 @@
+@using Model
+@model LoginModel
+
+@{
+    Layout = "LayoutOff.cshtml";
+}
+
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+    <div class="card shadow p-4" style="width: 100%; max-width: 420px;">
+
+        <h2 class="text-center mb-3">Login</h2>
+
+        <p class="text-center text-muted">
+            Novo por aqui?
+            <a asp-controller="Login" asp-action="Register">Criar conta</a>
+        </p>
+
+        @if (TempData["ErroMSG"] != null)
+        {
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                @TempData["ErroMSG"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        }
+
+        <form asp-controller="Login" asp-action="Connect" method="post">
+
+            <div class="mb-3">
+                <label asp-for="login" class="form-label">Email</label>
+                <input asp-for="login" class="form-control" placeholder="name@example.com" />
+                <span class="text-danger">@Html.ValidationMessageFor(x => x.login)</span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="password" class="form-label">Senha</label>
+                <input asp-for="password" type="password" class="form-control" />
+                <span class="text-danger">@Html.ValidationMessageFor(x => x.password)</span>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100 mt-2">
+                Entrar
+            </button>
+        </form>
+
+    </div>
+</div>
