@@ -1,0 +1,86 @@
+@using DBModel
+@model Market
+
+<div class="container mt-5" style="max-width: 600px;">
+
+    <h2 class="text-center mb-4">Criar nova loja</h2>
+
+    @if (TempData["ErroMSG"] != null)
+    {
+        <div class="alert alert-danger">
+            @TempData["ErroMSG"]
+        </div>
+    }
+
+    @if (TempData["SucessoMSG"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["SucessoMSG"]
+        </div>
+    }
+
+    <form asp-controller="MyMarket" asp-action="SendResquestMarketCreation" method="post">
+
+        <div class="mb-3">
+            <label class="form-label">Nome da loja</label>
+            <input asp-for="marketName" class="form-control" placeholder="Ex: Mercado Fênix" />
+            @Html.ValidationMessageFor(x => x.marketName, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Descrição</label>
+            <textarea asp-for="description" class="form-control" rows="3" placeholder="Descreva sua loja"></textarea>
+            @Html.ValidationMessageFor(x => x.description, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Email Contact</label>
+            <input asp-for="phoneOrEmailContact" class="form-control" placeholder="xxxxxx@email.com" />
+            @Html.ValidationMessageFor(x => x.phoneOrEmailContact, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Selecione o estado da sua loja</label>
+            <select class="form-select" aria-label="Default select example" asp-for="marketLocal">
+                <option value="AC">Acre</option>
+                <option value="AL">Alagoas</option>
+                <option value="AP">Amapá</option>
+                <option value="AM">Amazonas</option>
+                <option value="BA">Bahia</option>
+                <option value="CE">Ceará</option>
+                <option value="ES">Espírito Santo</option>
+                <option value="GO">Goiás</option>
+                <option value="MA">Maranhão</option>
+                <option value="MT">Mato Grosso</option>
+                <option value="MS">Mato Grosso do Sul</option>
+                <option value="MG">Minas Gerais</option>
+                <option value="PA">Pará</option>
+                <option value="PB">Paraíba</option>
+                <option value="PR">Paraná</option>
+                <option value="PE">Pernambuco</option>
+                <option value="PI">Piauí</option>
+                <option value="RJ">Rio de Janeiro</option>
+                <option value="RN">Rio Grande do Norte</option>
+                <option value="RS">Rio Grande do Sul</option>
+                <option value="RO">Rondônia</option>
+                <option value="RR">Roraima</option>
+                <option value="SC">Santa Catarina</option>
+                <option value="SP">São Paulo</option>
+                <option value="SE">Sergipe</option>
+                <option value="TO">Tocantins</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">CNPJ</label>
+            <input asp-for="cnpj" class="form-control" placeholder="xx.xxx.xxx/xxxx-xx" />
+            @Html.ValidationMessageFor(x => x.cnpj, "Por favor, insira o cnpj")
+        </div>
+
+        <button type="submit" class="btn btn-dark w-100">
+            Criar loja
+        </button>
+
+    </form>
+
+</div>

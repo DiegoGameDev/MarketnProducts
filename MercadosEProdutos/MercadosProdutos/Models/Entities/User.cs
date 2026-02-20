@@ -8,6 +8,7 @@ namespace DBModel;
 public class User : IdentityUser
 {
     public UserType userType {get; set;}
+    public ICollection<MarketAssociated> marketAssociateds {get; set;}
 
     public bool IsValid(string _password)
     {

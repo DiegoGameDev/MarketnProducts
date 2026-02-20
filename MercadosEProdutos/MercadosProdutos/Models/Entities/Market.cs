@@ -9,6 +9,7 @@ public class Market
 
     [Required]
     public string marketName {get; set;}
+    public string description {get; set;}
     
     [Required]
     public string marketLocal {get; set;}
@@ -18,4 +19,6 @@ public class Market
 
     [Required]
     public string cnpj {get; set;}
+
+    public ICollection<MarketAssociated> MarketAssociatedList {get; set;}
 }

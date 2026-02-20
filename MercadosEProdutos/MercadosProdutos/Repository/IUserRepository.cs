@@ -1,11 +1,12 @@
 using DBContext;
 using DBModel;
-using ResultOperation;
+using Results;
 
-namespace Entity;
+namespace Repository;
 
 public interface IUserRepository
 {
+    Task<ResultOperation> UserExists(string id);
     Task<ResultOperation<User>> GetByIdAsync(string id);
     Task<ResultOperation<User>> GetByLoginAsync(string email);
     Task<ResultOperation<List<User>>> GetAllAsync();

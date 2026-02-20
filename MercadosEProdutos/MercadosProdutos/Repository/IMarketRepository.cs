@@ -1,8 +1,8 @@
-using ResultOperation;
+using Results;
 using DBModel;
 using System.Linq.Expressions;
 
-namespace Entity
+namespace Repository
 {
     public interface IMarketRepository
     {

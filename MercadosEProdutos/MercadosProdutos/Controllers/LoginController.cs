@@ -1,9 +1,9 @@
-using ResultOperation;
+using Results;
 using Helper;
 using Microsoft.AspNetCore.Mvc;
 using Model;
 using DBModel;
-using Entity;
+using Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
@@ -74,6 +74,7 @@ public class LoginController : Controller
             return RedirectToAction("Register", "Login", userRegister);
         }
         
+        TempData["SucessoMSG"] = "Conta criada, verique o email para usar o site normalmente";
         return RedirectToAction("Index", "Login");
     }
 
@@ -95,7 +96,7 @@ public class LoginController : Controller
             return RedirectToAction("Index", "Login");
         }
 
-        TempData["SucessoMSG"] = resultConfirmEmail.Message;
+        TempData["SucessoMSG"] = "Email confirmado com sucesso!";
         _context.EnterSession(user.Data);
         await _Signin.SignInAsync(user.Data, isPersistent: false);
         return View();
@@ -121,10 +122,28 @@ public class LoginController : Controller
         try
         {
             if (!resultSearch.Succeeded)
-                {
-                    TempData["ErroMSG"] = "Credenciais inválidas";
-                    return View("Index", userLogin);
-                }
+            {
+                TempData["ErroMSG"] = "Credenciais inválidas";
+                return View("Index", userLogin);
+            }
+
+            if (!user.Data.EmailConfirmed) // mandar link de confirmação caso não esteja com o email confirmado
+            {
+                ResultOperation<string> token = await _DBContext.GenerateTokenAsync(user.Data);
+
+                // criação do link
+                if (!token.Success)
+                    return RedirectToAction("Index", "Login", userLogin);
+
+                var confirmationLink = Url.Action("ConfirmEmail",
+                    "Login",
+                    new { userID = user.Data.Id, token = token.Data},
+                    Request.Scheme
+                );
+
+                await _emailSender.SendEmailAsync(user.Data.Email, "Confirme seu email", $"Cliqui aqui para confirmar: {confirmationLink}");
+                TempData["SucessoMSG"] = "Link de confirmação foi enviado no seu email. Caso não encontre verique a caixa de spam.";
+            }
 
             _context.EnterSession(user.Data);
             await _Signin.SignInAsync(user.Data, isPersistent: false);

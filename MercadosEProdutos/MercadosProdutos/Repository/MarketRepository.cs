@@ -1,11 +1,11 @@
 using Microsoft.EntityFrameworkCore;
 using DBModel;
-using ResultOperation;
-using Entity;
+using Results;
+using Repository;
 using DBContext;
 using System.Linq.Expressions;
 
-namespace Entity
+namespace Repository
 {
     public class MarketRepository : IMarketRepository
     {

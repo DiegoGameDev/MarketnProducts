@@ -1,6 +1,6 @@
 using DBContext;
 using DBModel;
-using Entity;
+using Repository;
 using Helper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
@@ -44,6 +44,7 @@ builder.Services.Configure<DataProtectionTokenProviderOptions>(options =>
 builder.Services.AddScoped<IMarketRepository, MarketRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IMarketSession, MarketSession>();
+builder.Services.AddScoped<IMarketAssociatedRepository, MarketAssociatedRepository>();
 
 
 builder.Services.AddSession(x =>
@@ -55,8 +56,46 @@ builder.Services.AddSession(x =>
 
 var app = builder.Build();
 
+#region  CreateFirstAdminUser
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var userManager = services.GetRequiredService<UserManager<User>>();
+    var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
 
-using (var scope = app.Services.CreateScope()) // scope de roles 
+    string email = "admin@market.com";
+    string password = "Admin123!";
+
+    // Criar role se não existir
+    if (!await roleManager.RoleExistsAsync("Admin"))
+    {
+        await roleManager.CreateAsync(new IdentityRole("Admin"));
+    }
+
+    // Verificar se usuário já existe
+    var user = await userManager.FindByEmailAsync(email);
+
+    if (user == null)
+    {
+        var newUser = new User
+        {
+            UserName = email,
+            Email = email,
+            EmailConfirmed = true
+        };
+
+        var result = await userManager.CreateAsync(newUser, password);
+
+        if (result.Succeeded)
+        {
+            await userManager.AddToRoleAsync(newUser, "Admin");
+        }
+    }
+}
+#endregion
+
+#region Scope de roles
+using (var scope = app.Services.CreateScope()) 
 {
     var rolemanager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
@@ -71,6 +110,7 @@ using (var scope = app.Services.CreateScope()) // scope de roles
 
     }
 }
+#endregion
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

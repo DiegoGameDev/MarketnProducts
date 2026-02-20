@@ -1,7 +1,7 @@
 using MarketView;
 using Filter;
 using Microsoft.AspNetCore.Mvc;
-using Entity;
+using Repository;
 
 namespace MercadosProdutos.Controllers;
 

@@ -3,10 +3,10 @@ using DBModel;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.EntityFrameworkCore;
-using ResultOperation;
+using Results;
 
 
-namespace Entity;
+namespace Repository;
 
 public class UserRepository : IUserRepository
 {
@@ -131,10 +131,20 @@ public class UserRepository : IUserRepository
         var result = await _userManager.ConfirmEmailAsync(user, token);
 
         if (!result.Succeeded)
-            return ResultOperation<User>.Fail("Falha em confirmar o email, faça uma nova tentativa");
+            return ResultOperation<User>.Fail("Link expirado ou já foi utilizado. Se seu email não foi confirmado, tente fazer login novamente para receber outro link de confirmação");
 
         await _userManager.AddToRoleAsync(user, "Default");
 
         return ResultOperation<User>.Ok(user, "Email confirmado com sucesso");
+    }
+
+    public async Task<ResultOperation> UserExists(string id)
+    {
+        var user = await _userManager.FindByIdAsync(id);
+
+        if (user == null)
+            return ResultOperation.Fail("Usuário não encontrado");
+
+        return ResultOperation.Ok("Usuario existe");
     }
 }
