@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -45,6 +46,8 @@ builder.Services.AddScoped<IMarketRepository, MarketRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IMarketSession, MarketSession>();
 builder.Services.AddScoped<IMarketAssociatedRepository, MarketAssociatedRepository>();
+builder.Services.AddScoped<IMarketRequestRepository, MarketRequestRepository>();
+builder.Services.AddScoped<IMarketRequestService, MarketRequestService>();
 
 
 builder.Services.AddSession(x =>
@@ -99,7 +102,7 @@ using (var scope = app.Services.CreateScope())
 {
     var rolemanager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
-    string[] roles = {"Default", "Associated", "Admin"};
+    string[] roles = {"Default", "Associated", "Admin", "Reviewer"};
 
     foreach (var role in roles)
     {

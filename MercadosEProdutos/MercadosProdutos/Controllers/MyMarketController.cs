@@ -1,10 +1,10 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Filter;
 using Helper;
 using Repository;
 using DBModel;
-using AspNetCoreGeneratedDocument;
+using Services;
+using marketView = ViewModels.Market; // model market apenas para form
 
 namespace MercadosProdutos.Controllers;
 
@@ -14,12 +14,15 @@ public class MyMarketController : Controller
     private readonly IMarketSession _session;
     private readonly IMarketAssociatedRepository _context;
     private readonly IMarketRepository _marketContext;
+    private readonly IMarketRequestService _service;
 
-    public MyMarketController(IMarketSession session, IMarketAssociatedRepository context, IMarketRepository marketContext)
+    public MyMarketController(IMarketSession session, IMarketAssociatedRepository context, IMarketRepository marketContext,
+        IMarketRequestService service)
     {
         _session = session;
         _context = context;
         _marketContext = marketContext;
+        _service = service;
     }
 
     [HttpGet]
@@ -42,23 +45,23 @@ public class MyMarketController : Controller
         return View(resultSearch.Data);
     }
     [HttpGet]
-    public IActionResult Create(Market modelForm)
+    public IActionResult Create(marketView modelForm)
     {
         return View(modelForm);
     }
 
     [HttpPost]
-    public async Task<IActionResult> SendResquestMarketCreation(Market modelForm)
+    public async Task<IActionResult> SendResquestMarketCreation(marketView modelForm)
     {
         if (!ModelState.IsValid)
         {
+            TempData["ErroMSG"] = "Dados invalidos";
             return View("Create", modelForm);
         }
 
-        var marketResultCreation = await _marketContext.AddAsync(modelForm);
         var user = _session.GetSession();
 
-        //preparar o email
+        await _service.CreateMarketWithRequest(modelForm.ToModel(), user);
 
         return View("Create", modelForm);
     }

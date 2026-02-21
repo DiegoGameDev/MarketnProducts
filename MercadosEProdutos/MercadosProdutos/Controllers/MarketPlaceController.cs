@@ -18,7 +18,7 @@ public class MarketPlaceController : Controller
     [HttpGet]
     public async Task<IActionResult> Index()
     {
-        var marketDB = await _context.GetAllAsync();
+        var marketDB = await _context.GetApprovedMarketListAsync();
 
         return View(marketDB.Data);
     }

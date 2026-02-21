@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Enums;
 using Microsoft.AspNetCore.SignalR;
 
 namespace DBModel;
@@ -19,6 +20,10 @@ public class Market
 
     [Required]
     public string cnpj {get; set;}
+    [Required]
+    public MarketReviewStatus marketReviewStatus {get; set;}
+
+    public MarketRequestCreation? marketRequestCreation {get; set;}
 
     public ICollection<MarketAssociated> MarketAssociatedList {get; set;}
 }

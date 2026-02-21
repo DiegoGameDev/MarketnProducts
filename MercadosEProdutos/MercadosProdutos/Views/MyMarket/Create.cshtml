@@ -1,4 +1,4 @@
-@using DBModel
+@using ViewModels
 @model Market
 
 <div class="container mt-5" style="max-width: 600px;">
@@ -24,19 +24,19 @@
         <div class="mb-3">
             <label class="form-label">Nome da loja</label>
             <input asp-for="marketName" class="form-control" placeholder="Ex: Mercado Fênix" />
-            @Html.ValidationMessageFor(x => x.marketName, "", new { @class = "text-danger" })
+            @Html.ValidationMessageFor(x => x.marketName)
         </div>
 
         <div class="mb-3">
             <label class="form-label">Descrição</label>
             <textarea asp-for="description" class="form-control" rows="3" placeholder="Descreva sua loja"></textarea>
-            @Html.ValidationMessageFor(x => x.description, "", new { @class = "text-danger" })
+            @Html.ValidationMessageFor(x => x.description)
         </div>
 
         <div class="mb-3">
             <label class="form-label">Email Contact</label>
             <input asp-for="phoneOrEmailContact" class="form-control" placeholder="xxxxxx@email.com" />
-            @Html.ValidationMessageFor(x => x.phoneOrEmailContact, "", new { @class = "text-danger" })
+            @Html.ValidationMessageFor(x => x.phoneOrEmailContact)
         </div>
 
         <div class="mb-3">
@@ -74,7 +74,7 @@
         <div class="mb-3">
             <label class="form-label">CNPJ</label>
             <input asp-for="cnpj" class="form-control" placeholder="xx.xxx.xxx/xxxx-xx" />
-            @Html.ValidationMessageFor(x => x.cnpj, "Por favor, insira o cnpj")
+            @Html.ValidationMessageFor(x => x.cnpj)
         </div>
 
         <button type="submit" class="btn btn-dark w-100">

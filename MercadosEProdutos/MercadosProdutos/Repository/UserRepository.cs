@@ -1,5 +1,6 @@
 using DBContext;
 using DBModel;
+using Enums;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.EntityFrameworkCore;
@@ -146,5 +147,12 @@ public class UserRepository : IUserRepository
             return ResultOperation.Fail("Usuário não encontrado");
 
         return ResultOperation.Ok("Usuario existe");
+    }
+
+    public async Task<ResultOperation<IEnumerable<User>>> GetByUserType(UserType userType)
+    {
+        IEnumerable<User> users = await _userManager.Users.Where(x => x.userType == userType).ToListAsync();
+
+        return ResultOperation<IEnumerable<User>>.Ok(users, $"{users.Count()} Usuarios do tipo: {userType} foram encontrados");
     }
 }

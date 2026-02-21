@@ -11,7 +11,7 @@ public class EmailSender : IEmailSender
     {
         var smtp = new SmtpClient("smtp.gmail.com", 587)
         {
-            Credentials = new NetworkCredential("diegosantanacontato2@gmail.com", "spjb xzor slnb eqmd"),
+            Credentials = new NetworkCredential("diegosantanacontato2@gmail.com", Environment.GetEnvironmentVariable("EmailPassKey")),
             EnableSsl = true
         };
 

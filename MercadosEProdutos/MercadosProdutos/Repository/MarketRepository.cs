@@ -144,5 +144,12 @@ namespace Repository
 
             return ResultOperation<List<Product>>.Ok(products);
         }
+
+        public async Task<ResultOperation<IEnumerable<Market>>> GetApprovedMarketListAsync()
+        {
+            IEnumerable<Market> markets = await _context.MarketList.Where(x => x.marketReviewStatus == Enums.MarketReviewStatus.Approved).AsNoTracking().ToListAsync();
+
+            return ResultOperation<IEnumerable<Market>>.Ok(markets, "Lista de mercados aprovados retornadas com sucesso");
+        }
     }
 }

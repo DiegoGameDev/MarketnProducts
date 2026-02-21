@@ -13,6 +13,7 @@ namespace Repository
 
         Task<ResultOperation<Market>> GetByIdAsync(Guid id);
         Task<ResultOperation<IEnumerable<Market>>> GetAllAsync();
+        Task<ResultOperation<IEnumerable<Market>>> GetApprovedMarketListAsync();
         Task<ResultOperation<List<Product>>> GetProductsFromMarket(Market market);
     }
 }
