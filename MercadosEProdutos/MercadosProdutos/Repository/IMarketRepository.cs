@@ -7,7 +7,7 @@ namespace Repository
     public interface IMarketRepository
     {
         Task<ResultOperation<Market>> AddAsync(Market market);
-        Task<ResultOperation<Market>> UpdateAsync(Market market);
+        Task<ResultOperation> UpdateAsync(Market market);
         Task<ResultOperation<bool>> DeleteAsync(Guid id);
         Task<ResultOperation<Market>> GetByName(string slug);
 

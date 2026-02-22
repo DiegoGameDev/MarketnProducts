@@ -1,8 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Helper;
-using Repository;
-using DBModel;
 using Services;
 using marketView = ViewModels.Market; // model market apenas para form
 
@@ -12,35 +10,30 @@ namespace MercadosProdutos.Controllers;
 public class MyMarketController : Controller
 {
     private readonly IMarketSession _session;
-    private readonly IMarketAssociatedRepository _context;
-    private readonly IMarketRepository _marketContext;
-    private readonly IMarketRequestService _service;
+    private readonly IMarketAppService _service;
 
-    public MyMarketController(IMarketSession session, IMarketAssociatedRepository context, IMarketRepository marketContext,
-        IMarketRequestService service)
+    public MyMarketController(IMarketSession session, IMarketAppService service)
     {
         _session = session;
-        _context = context;
-        _marketContext = marketContext;
         _service = service;
     }
 
     [HttpGet]
-    public async Task<IActionResult> Index(string marketID)
+    public async Task<IActionResult> Index()
     {
-        var User = _session.GetSession();
+        var user = _session.GetSession();
 
-        var marketListResult = await _context.GetMarketListByUserId(User.Id);
+        var result = await _service.GetMarketsByUser(user.Id);
 
-        IEnumerable<Market> marketList = marketListResult.Data;
-
-        return View(marketList);
+        return View(result.Data);
     }
 
     [HttpGet]
     public async Task<IActionResult> Edit(Guid id)
     {
-        var resultSearch = await _marketContext.GetByIdAsync(id);
+        var resultSearch = await _service.GetMarketById(id);
+        var resultProducts = await _service.GetProductsInMarket(id);
+        resultSearch.Data.ProductInMarketList = resultProducts.Data;
 
         return View(resultSearch.Data);
     }
@@ -53,16 +46,35 @@ public class MyMarketController : Controller
     [HttpPost]
     public async Task<IActionResult> SendResquestMarketCreation(marketView modelForm)
     {
-        if (!ModelState.IsValid)
-        {
-            TempData["ErroMSG"] = "Dados invalidos";
+         if (!ModelState.IsValid)
             return View("Create", modelForm);
-        }
 
         var user = _session.GetSession();
 
-        await _service.CreateMarketWithRequest(modelForm.ToModel(), user);
+        var result = await _service.CreateMarketWithRequest(modelForm.ToModel(), user);
 
-        return View("Create", modelForm);
+        if (!result.Success)
+        {
+            TempData["ErroMSG"] = result.Message;
+            return View("Create", modelForm);
+        }
+
+        TempData["SucessoMSG"] = result.Message;
+        return RedirectToAction("Index");
+    }
+
+    public IActionResult CreateProduct(Guid marketId)
+    {
+        return NotFound();
+    }
+
+    public IActionResult EditProduct()
+    {
+        return NotFound();
+    }
+
+    public IActionResult DeleteProduct()
+    {
+        return NotFound();
     }
 }

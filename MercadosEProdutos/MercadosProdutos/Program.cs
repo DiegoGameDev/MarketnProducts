@@ -47,7 +47,7 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IMarketSession, MarketSession>();
 builder.Services.AddScoped<IMarketAssociatedRepository, MarketAssociatedRepository>();
 builder.Services.AddScoped<IMarketRequestRepository, MarketRequestRepository>();
-builder.Services.AddScoped<IMarketRequestService, MarketRequestService>();
+builder.Services.AddScoped<IMarketAppService, MarketAppService>();
 
 
 builder.Services.AddSession(x =>

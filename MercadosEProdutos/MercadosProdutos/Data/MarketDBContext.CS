@@ -35,4 +35,4 @@ public class MarketDBContext : IdentityDbContext<User>
     public DbSet<MarketAssociated> MarketAssociatedList {get; set;}
     public DbSet<MarketRequestCreation> MarketRequestCreations {get; set;}
 
-    }
+}

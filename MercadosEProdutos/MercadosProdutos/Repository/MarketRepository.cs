@@ -31,18 +31,18 @@ namespace Repository
             }
         }
 
-        public async Task<ResultOperation<Market>> UpdateAsync(Market market)
+        public async Task<ResultOperation> UpdateAsync(Market market)
         {
             try
             {
                 _context.MarketList.Update(market);
                 await _context.SaveChangesAsync();
 
-                return ResultOperation<Market>.Ok(market, "Market updated successfully.");
+                return ResultOperation.Ok("Market updated successfully.");
             }
             catch (Exception ex)
             {
-                return ResultOperation<Market>.Fail(ex.Message);
+                return ResultOperation.Fail(ex.Message);
             }
         }
 
@@ -140,7 +140,7 @@ namespace Repository
             if (market == null)
                 return ResultOperation<List<Product>>.Fail("Loja não existe");
 
-            List<Product> products = await _context.ProductList.Where(x => x.MarketIdentification == market.ID).ToListAsync();
+            List<Product> products = await _context.ProductList.Where(x => x.MarketID == market.ID).ToListAsync();
 
             return ResultOperation<List<Product>>.Ok(products);
         }

@@ -9,8 +9,10 @@ public class Product
     
     [Required]
     public string productName {get; set;}
+
+    public string? description {get; set;}
     [Required]
     public decimal productPrice {get; set;}
     [Required]
-    public Guid MarketIdentification {get; set;}
+    public Guid MarketID {get; set;}
 }

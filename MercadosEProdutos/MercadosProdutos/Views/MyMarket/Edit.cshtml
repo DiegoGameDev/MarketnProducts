@@ -1,3 +1,146 @@
 @using DBModel
 @model Market
 
+@{
+    ViewData["Title"] = "Editar Loja";
+}
+
+<div class="container mt-5">
+
+    <h2 class="text-center mb-4">Gerenciar Loja</h2>
+
+    @if (TempData["ErroMSG"] != null)
+    {
+        <div class="alert alert-danger text-center">
+            @TempData["ErroMSG"]
+        </div>
+    }
+
+    @if (TempData["SucessoMSG"] != null)
+    {
+        <div class="alert alert-success text-center">
+            @TempData["SucessoMSG"]
+        </div>
+    }
+
+    <!-- ========================= -->
+    <!-- EDITAR INFORMAÇÕES DA LOJA -->
+    <!-- ========================= -->
+
+    <div class="card shadow-sm mb-5">
+        <div class="card-body">
+
+            <h4 class="mb-3">Informações da Loja</h4>
+
+            <form asp-action="UpdateMarket" method="post">
+
+                <input type="hidden" asp-for="ID" />
+
+                <div class="mb-3">
+                    <label class="form-label">Nome da loja</label>
+                    <input asp-for="marketName" class="form-control" />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Descrição</label>
+                    <textarea asp-for="description" class="form-control" rows="3"></textarea>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Localização</label>
+                    <input asp-for="marketLocal" class="form-control" />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Contato</label>
+                    <input asp-for="phoneOrEmailContact" class="form-control" />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">CNPJ</label>
+                    <input asp-for="cnpj" class="form-control" />
+                </div>
+
+                <button type="submit" class="btn btn-success w-100">
+                    Salvar alterações
+                </button>
+
+            </form>
+        </div>
+    </div>
+
+
+    <!-- ========================= -->
+    <!-- PRODUTOS DA LOJA -->
+    <!-- ========================= -->
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4>Produtos</h4>
+
+        <a asp-action="CreateProduct"
+           asp-route-marketId="@Model.ID"
+           class="btn btn-dark">
+            + Novo Produto
+        </a>
+    </div>
+
+    @if (Model.ProductInMarketList == null || !Model.ProductInMarketList.Any())
+    {
+        <div class="alert alert-info text-center">
+            Nenhum produto cadastrado ainda.
+        </div>
+    }
+    else
+    {
+        <div class="row">
+
+            @foreach (var product in Model.ProductInMarketList)
+            {
+                <div class="col-md-4 mb-4">
+
+                    <div class="card shadow-sm h-100">
+
+                        <img src="/Resources/products/@(product.ID + ".png")"
+                             class="card-img-top"
+                             style="height: 180px; object-fit: cover;" />
+
+                        <div class="card-body d-flex flex-column">
+
+                            <h5 class="card-title">@product.productName</h5>
+
+                            <p class="card-text">
+                                @(product.description?.Length > 80
+                                    ? product.description.Substring(0, 80) + "..."
+                                    : product.description)
+                            </p>
+
+                            <strong class="mb-2">
+                                R$ @product.productPrice
+                            </strong>
+
+                            <div class="mt-auto d-flex gap-2">
+
+                                <a asp-action="EditProduct"
+                                   asp-route-id="@product.ID"
+                                   class="btn btn-primary w-50">
+                                    Editar
+                                </a>
+
+                                <a asp-action="DeleteProduct"
+                                   asp-route-id="@product.ID"
+                                   class="btn btn-danger w-50">
+                                    Excluir
+                                </a>
+
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+            }
+
+        </div>
+    }
+
+</div>
