@@ -67,3 +67,6 @@ Acesse a URL exibida no terminal (ex: https://localhost:xxxx
 ).
 
 O programa já vai criar um usuario Admin para você já conseguir acessar
+*Não esqueça de colocar seu email e a sua passKey para o programa ter acesso ao envio de mensagem a partir do seu email! 
+
+Faça bom uso e fique a vontade para comentar sobre o código
