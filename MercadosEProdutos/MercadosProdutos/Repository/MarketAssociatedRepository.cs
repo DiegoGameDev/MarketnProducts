@@ -30,7 +30,7 @@ public class MarketAssociatedRepository : IMarketAssociatedRepository
 
     public async Task<ResultOperation<IEnumerable<Market>>> GetMarketListByUserId(string id)
     {
-        IEnumerable<Market> marketList = await _context.MarketAssociatedList.Where(x => x.UserID == id).Select(x =>x.Market).AsNoTracking().ToListAsync();
+        IEnumerable<Market> marketList = await _context.MarketAssociatedList.Where(x => x.UserID == id).Select(x =>x.Market).Where(m => m.marketReviewStatus == Enums.MarketReviewStatus.Approved).AsNoTracking().ToListAsync();
 
         return ResultOperation<IEnumerable<Market>>.Ok(marketList);
     }

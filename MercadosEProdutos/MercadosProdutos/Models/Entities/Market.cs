@@ -25,6 +25,6 @@ public class Market
 
     public MarketRequestCreation? marketRequestCreation {get; set;}
 
-    public ICollection<MarketAssociated> MarketAssociatedList {get; set;}
-    public ICollection<Product> ProductInMarketList {get; set;}
+    public ICollection<MarketAssociated>? MarketAssociatedList {get; set;}
+    public ICollection<Product>? ProductInMarketList {get; set;}
 }

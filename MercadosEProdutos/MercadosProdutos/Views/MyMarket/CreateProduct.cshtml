@@ -1,0 +1,36 @@
+@model DBModel.Product
+
+<div class="container mt-5" style="max-width: 600px;">
+
+    <h2 class="text-center mb-4">Criar Produto</h2>
+
+    @if (TempData["ErroMSG"] != null)
+    {
+        <div class="alert alert-danger">@TempData["ErroMSG"]</div>
+    }
+
+    <form asp-action="CreateProductConfirm" method="post">
+
+        <input type="hidden" asp-for="MarketID" />
+
+        <div class="mb-3">
+            <label class="form-label">Nome</label>
+            <input asp-for="productName" class="form-control" />
+            @Html.ValidationMessageFor(x => x.productName)
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Descrição</label>
+            <textarea asp-for="description" class="form-control"></textarea>
+            @Html.ValidationMessageFor(x => x.description)
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Preço</label>
+            <input asp-for="productPrice" class="form-control" />
+            @Html.ValidationMessageFor(x => x.productPrice)
+        </div>
+
+        <button type="submit" class="btn btn-dark w-100">Criar Produto</button>
+    </form>
+</div>

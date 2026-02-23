@@ -7,6 +7,22 @@
 
 <div class="container mt-5">
 
+    @if (TempData["ErroMSG"] != null)
+    {
+        <div class="alert alert-danger text-center">
+            <button type="button" class="btn btn-danger btn-sm close-alert" aria-label="Close">X</button>
+            @TempData["ErroMSG"]
+        </div>
+    }
+
+    @if (TempData["SucessoMSG"] != null)
+    {
+        <div class="alert alert-success text-center">
+            <button type="button" class="btn btn-success btn-sm close-alert" aria-label="Close">X</button>
+            @TempData["SucessoMSG"]
+        </div>
+    }
+
     <h2 class="text-center mb-4">Minhas Lojas</h2>
 
     <!-- 🔹 Card de criação -->

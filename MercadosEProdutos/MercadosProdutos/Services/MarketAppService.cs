@@ -37,7 +37,7 @@ public class MarketAppService : IMarketAppService
         _env = env;
     }
 
-    public async Task<ResultOperation<IEnumerable<Market>>> GetMarketsByUser(string userId)
+    public async Task<ResultOperation<IEnumerable<Market>>> GetMarketsByUserApproved(string userId)
     {
         return await _marketAssociatedRepository.GetMarketListByUserId(userId);
     }
@@ -53,6 +53,7 @@ public class MarketAppService : IMarketAppService
 
         try
         {
+            market.marketReviewStatus = Enums.MarketReviewStatus.Pending; 
             // 1. Criar mercado
             var marketResult = await _marketRepository.AddAsync(market);
 
@@ -93,7 +94,7 @@ public class MarketAppService : IMarketAppService
                 foreach(var i in reviewers.Data)
                 {
                     if (!string.IsNullOrEmpty(i.Email))
-                    await _emailSender.SendEmailAsync(i.Email.ToLower(), "Nova solicitação", htmlMessage: htmlBodyMessage);
+                    await _emailSender.SendEmailAsync(i.Email, "Nova solicitação", htmlMessage: htmlBodyMessage);
                 }
             }
             catch (System.Exception)
@@ -116,7 +117,31 @@ public class MarketAppService : IMarketAppService
 
     public async Task<ResultOperation> UpdateMarket(Market market)
     {
-        return await _marketRepository.UpdateAsync(market);
+        if (market == null)
+            return ResultOperation.Fail("Mercado inválido");
+
+        try
+        {
+            var result = await _marketRepository.GetByIdAsync(market.ID);
+
+            if (result == null)
+                return ResultOperation.Fail("Mercado não encontrado");
+
+            // update fields
+            result.Data.marketName = market.marketName;
+            result.Data.marketLocal = market.marketLocal;
+            result.Data.description = market.description;
+            result.Data.marketReviewStatus = market.marketReviewStatus;
+
+            await _marketRepository.UpdateAsync(result.Data);
+            await _context.SaveChangesAsync();
+
+            return ResultOperation.Ok("Mercado atualizado com sucesso");
+        }
+        catch
+        {
+            return ResultOperation.Fail("Mercado não foi atualizado");
+        }
     }
 
     public async Task<ResultOperation<ICollection<Product>>> GetProductsInMarket(Guid id)
@@ -127,5 +152,82 @@ public class MarketAppService : IMarketAppService
             return ResultOperation<ICollection<Product>>.Ok(resultProducts, "Produtos encontrados");
         else
             return ResultOperation<ICollection<Product>>.Fail("Produtos não foram encontrados");
+    }
+
+    public async Task<ResultOperation> CreateProduct(Product product)
+    {
+        if (product == null)
+            return ResultOperation.Fail("Produto inválido");
+
+        try
+        {
+            await _context.ProductList.AddAsync(product);
+            await _context.SaveChangesAsync();
+
+            return ResultOperation.Ok("Produto criado com sucesso");
+        }
+        catch (Exception ex)
+        {
+            return ResultOperation.Fail(ex.Message);
+        }
+    }
+
+    public async Task<ResultOperation> EditProduct(Product product)
+    {
+        if (product == null)
+            return ResultOperation.Fail("Produto inválido");
+
+        try
+        {
+            var existing = await _context.ProductList
+                .FirstOrDefaultAsync(p => p.ID == product.ID && p.MarketID == product.MarketID);
+
+            if (existing == null)
+                return ResultOperation.Fail("Produto não encontrado");
+
+            // update fields
+            existing.productName = product.productName;
+            existing.description = product.description;
+            existing.productPrice = product.productPrice;
+
+            await _context.SaveChangesAsync();
+
+            return ResultOperation.Ok("Produto atualizado com sucesso");
+        }
+        catch
+        {
+            return ResultOperation.Fail("Produto não foi atualizado");
+        }
+    }
+
+    public async Task<ResultOperation> DeleteProduct(Guid marketId, int productID)
+    {
+        try
+        {
+            var existing = await _context.ProductList
+                .FirstOrDefaultAsync(p => p.ID == productID && p.MarketID == marketId);
+
+            if (existing == null)
+                return ResultOperation.Fail("Produto não encontrado");
+
+            _context.ProductList.Remove(existing);
+            await _context.SaveChangesAsync();
+
+            return ResultOperation.Ok("Produto excluído com sucesso");
+        }
+        catch (Exception ex)
+        {
+            return ResultOperation.Fail(ex.Message);
+        }
+    }
+
+    public async Task<ResultOperation<Product>> GetProductById(int id)
+    {
+        var product = await _context.ProductList.FirstOrDefaultAsync(p => p.ID == id);
+
+        if (product != null)
+            return ResultOperation<Product>.Ok(product, "Produto encontrado");
+        else
+            return ResultOperation<Product>.Fail("Produto não encontrado");
     }
 }

@@ -8,6 +8,7 @@
     @if (TempData["ErroMSG"] != null)
     {
         <div class="alert alert-danger">
+            <button type="button" class="btn btn-danger btn-sm close-alert" aria-label="Close">X</button>
             @TempData["ErroMSG"]
         </div>
     }
@@ -15,6 +16,7 @@
     @if (TempData["SucessoMSG"] != null)
     {
         <div class="alert alert-success">
+            <button type="button" class="btn btn-danger btn-sm close-alert" aria-label="Close">X</button>
             @TempData["SucessoMSG"]
         </div>
     }

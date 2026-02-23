@@ -12,6 +12,7 @@
     @if (TempData["ErroMSG"] != null)
     {
         <div class="alert alert-danger text-center">
+            <button type="button" class="btn btn-danger btn-sm close-alert" aria-label="Close">X</button>
             @TempData["ErroMSG"]
         </div>
     }
@@ -19,6 +20,7 @@
     @if (TempData["SucessoMSG"] != null)
     {
         <div class="alert alert-success text-center">
+            <button type="button" class="btn btn-success btn-sm close-alert" aria-label="Close">X</button>
             @TempData["SucessoMSG"]
         </div>
     }
@@ -32,7 +34,7 @@
 
             <h4 class="mb-3">Informações da Loja</h4>
 
-            <form asp-action="UpdateMarket" method="post">
+            <form asp-action="UpdateMarket" asp-controller="MyMarket" method="post">
 
                 <input type="hidden" asp-for="ID" />
 
@@ -78,7 +80,7 @@
         <h4>Produtos</h4>
 
         <a asp-action="CreateProduct"
-           asp-route-marketId="@Model.ID"
+           asp-route-marketID="@Model.ID"
            class="btn btn-dark">
             + Novo Produto
         </a>

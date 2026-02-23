@@ -1,0 +1,42 @@
+@model DBModel.Product
+
+<div class="container mt-5" style="max-width: 600px;">
+
+    <h2 class="text-center mb-4">Editar Produto</h2>
+
+    @if (TempData["ErroMSG"] != null)
+    {
+        <div class="alert alert-danger">@TempData["ErroMSG"]</div>
+    }
+
+    @if (TempData["SucessoMSG"] != null)
+    {
+        <div class="alert alert-success">@TempData["SucessoMSG"]</div>
+    }
+
+    <form asp-action="EditProductConfirm" method="post">
+
+        <input type="hidden" asp-for="ID" />
+        <input type="hidden" asp-for="MarketID" />
+
+        <div class="mb-3">
+            <label class="form-label">Nome</label>
+            <input asp-for="productName" class="form-control" />
+            @Html.ValidationMessageFor(x => x.productName)
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Descrição</label>
+            <textarea asp-for="description" class="form-control"></textarea>
+            @Html.ValidationMessageFor(x => x.description)
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Preço</label>
+            <input asp-for="productPrice" class="form-control" />
+            @Html.ValidationMessageFor(x => x.productPrice)
+        </div>
+
+        <button type="submit" class="btn btn-warning w-100">Salvar Alterações</button>
+    </form>
+</div>

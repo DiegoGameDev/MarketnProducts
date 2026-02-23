@@ -1,0 +1,22 @@
+@model DBModel.Product
+
+<div class="container mt-5" style="max-width: 600px;">
+
+    <h2 class="text-center mb-4 text-danger">Excluir Produto</h2>
+
+    <div class="alert alert-warning">
+        Tem certeza que deseja excluir este produto?
+    </div>
+
+    <div class="card p-3 mb-3">
+        <p><strong>Nome:</strong> @Model.productName</p>
+        <p><strong>Preço:</strong> R$ @Model.productPrice</p>
+    </div>
+
+    <form asp-action="DeleteProductConfirm" method="post">
+        <input type="hidden" asp-for="ID" />
+
+        <button type="submit" class="btn btn-danger w-100">Excluir</button>
+        <a asp-action="Index" class="btn btn-secondary w-100 mt-2">Cancelar</a>
+    </form>
+</div>
