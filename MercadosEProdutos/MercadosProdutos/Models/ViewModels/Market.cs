@@ -26,7 +26,7 @@ public class Market
             marketLocal = this.marketLocal,
             phoneOrEmailContact = this.phoneOrEmailContact,
             cnpj = this.cnpj,
-            marketReviewStatus = Enums.MarketReviewStatus.Pending
+            marketReviewStatus = Enums.MarketStatus.Pending
         };
     }
 }

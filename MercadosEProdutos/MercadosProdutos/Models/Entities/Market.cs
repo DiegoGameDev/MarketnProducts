@@ -21,7 +21,7 @@ public class Market
     [Required]
     public string cnpj {get; set;}
     [Required]
-    public MarketReviewStatus marketReviewStatus {get; set;}
+    public MarketStatus marketReviewStatus {get; set;}
 
     public MarketRequestCreation? marketRequestCreation {get; set;}
 

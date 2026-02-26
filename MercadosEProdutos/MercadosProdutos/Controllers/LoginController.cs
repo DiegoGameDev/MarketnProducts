@@ -147,7 +147,7 @@ public class LoginController : Controller
 
             _context.EnterSession(user.Data);
             await _Signin.SignInAsync(user.Data, isPersistent: false);
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "MarketPlace");
         }
         catch (DbUpdateException error)
         {

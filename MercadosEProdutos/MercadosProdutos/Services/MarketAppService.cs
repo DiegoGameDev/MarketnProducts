@@ -53,7 +53,7 @@ public class MarketAppService : IMarketAppService
 
         try
         {
-            market.marketReviewStatus = Enums.MarketReviewStatus.Pending; 
+            market.marketReviewStatus = Enums.MarketStatus.Pending; 
             // 1. Criar mercado
             var marketResult = await _marketRepository.AddAsync(market);
 
@@ -79,7 +79,7 @@ public class MarketAppService : IMarketAppService
             // 3. (Opcional) Buscar reviewers
             var reviewers = await _userRepository.GetByUserType(Enums.UserType.Reviewer);
 
-            // Aqui você pode futuramente:
+
             string path = Path.Combine(_env.ContentRootPath, "Email Templates", "MarketRequest.html");
             var htmlBodyMessage = await File.ReadAllTextAsync(path);
             

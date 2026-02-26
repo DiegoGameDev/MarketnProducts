@@ -35,6 +35,13 @@ public class ResultOperation
     public string Message;
 
     public string title;
+    private bool v1;
+    private string v2;
+
+    public ResultOperation()
+    {
+       
+    }
 
     public static ResultOperation Ok(string message = null)
         {

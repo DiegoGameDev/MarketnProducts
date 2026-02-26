@@ -46,23 +46,23 @@ namespace Repository
             }
         }
 
-        public async Task<ResultOperation<bool>> DeleteAsync(Guid id)
+        public async Task<ResultOperation> DeleteAsync(Guid id)
         {
             try
             {
                 var market = await _context.MarketList.FindAsync(id);
 
                 if (market == null)
-                    return ResultOperation<bool>.Fail("Market not found.");
+                    return ResultOperation.Fail("Market not found.");
 
                 _context.MarketList.Remove(market);
                 await _context.SaveChangesAsync();
 
-                return ResultOperation<bool>.Ok(true, "Market deleted successfully.");
+                return ResultOperation.Ok("Market deleted successfully.");
             }
             catch (Exception ex)
             {
-                return ResultOperation<bool>.Fail(ex.Message);
+                return ResultOperation.Fail(ex.Message);
             }
         }
 
@@ -147,9 +147,41 @@ namespace Repository
 
         public async Task<ResultOperation<IEnumerable<Market>>> GetApprovedMarketListAsync()
         {
-            IEnumerable<Market> markets = await _context.MarketList.Where(x => x.marketReviewStatus == Enums.MarketReviewStatus.Approved).AsNoTracking().ToListAsync();
+            IEnumerable<Market> markets = await _context.MarketList.Where(x => x.marketReviewStatus == Enums.MarketStatus.Approved).AsNoTracking().ToListAsync();
 
             return ResultOperation<IEnumerable<Market>>.Ok(markets, "Lista de mercados aprovados retornadas com sucesso");
         }
+
+        public async Task<ResultOperation<IEnumerable<Market>>> GetRejectMarketListAsync()
+        {
+            IEnumerable<Market> markets = await _context.MarketList.Where(x => x.marketReviewStatus == Enums.MarketStatus.Rejected).AsNoTracking().ToListAsync();
+
+            return ResultOperation<IEnumerable<Market>>.Ok(markets, "Lista de mercados rejeitados retornadas com sucesso");
+        }
+
+        public async Task<ResultOperation> ApproveMarket(Guid marketId)
+        {
+            var market = await _context.MarketList.FirstOrDefaultAsync(x => x.ID == marketId);
+            if (market == null)
+                return ResultOperation.Fail("Market not found.");
+
+            market.marketReviewStatus = Enums.MarketStatus.Approved;
+            _context.MarketList.Update(market);
+            await _context.SaveChangesAsync();
+            return ResultOperation.Ok("Market approved successfully.");
+        }
+
+        public async Task<ResultOperation> RejectMarket(Guid marketId)
+        {
+            var market = await _context.MarketList.FirstOrDefaultAsync(x => x.ID == marketId);
+            if (market == null)
+                return ResultOperation.Fail("Market not found.");
+
+            market.marketReviewStatus = Enums.MarketStatus.Rejected;
+            _context.MarketList.Update(market);
+            await _context.SaveChangesAsync();
+            return ResultOperation.Ok("Market rejected successfully.");
+        }
+        
     }
 }

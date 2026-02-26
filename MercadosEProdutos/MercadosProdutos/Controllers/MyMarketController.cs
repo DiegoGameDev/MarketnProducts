@@ -40,12 +40,12 @@ public class MyMarketController : Controller
         var resultProducts = await _service.GetProductsInMarket(id);
         resultSearch.Data.ProductInMarketList = resultProducts.Data;
 
-        if (resultSearch.Data.marketReviewStatus == Enums.MarketReviewStatus.Pending)
+        if (resultSearch.Data.marketReviewStatus == Enums.MarketStatus.Pending)
         {
             TempData["InfoMSG"] = "Sua solicitação de criação de mercado ainda está pendente de aprovação. Você pode editar as informações, mas elas só serão atualizadas após a aprovação.";
             return View("Index");
         }
-         else if (resultSearch.Data.marketReviewStatus == Enums.MarketReviewStatus.Rejected)
+         else if (resultSearch.Data.marketReviewStatus == Enums.MarketStatus.Rejected)
         {
             TempData["ErroMSG"] = "Sua solicitação de criação de mercado foi rejeitada. Por favor, revise as informações e envie novamente para aprovação.";
             return View("Index");
@@ -99,7 +99,7 @@ public class MyMarketController : Controller
             return View("Edit", modelForm);
         }
 
-        modelForm.marketReviewStatus = Enums.MarketReviewStatus.Approved;
+        modelForm.marketReviewStatus = Enums.MarketStatus.Approved;
         var result = await _service.UpdateMarket(modelForm);
 
         if (!result.Success)

@@ -17,7 +17,7 @@ public class MarketRequestRepository : IMarketRequestRepository
 
     public async Task<ResultOperation> CreateRequest(MarketRequestCreation request)
     {
-        request.Status = Enums.MarketReviewStatus.Pending;
+        request.Status = Enums.MarketStatus.Pending;
         request.CreatedAt = DateTime.UtcNow;
 
         await _context.MarketRequestCreations.AddAsync(request);
@@ -29,7 +29,7 @@ public class MarketRequestRepository : IMarketRequestRepository
     public async Task<ResultOperation<IEnumerable<MarketRequestCreation>>> GetPendingRequests()
     {
         var requests = await _context.MarketRequestCreations
-            .Where(x => x.Status == MarketReviewStatus.Pending)
+            .Where(x => x.Status == MarketStatus.Pending)
             .Include(x => x.Market)
             .AsNoTracking()
             .ToListAsync();
@@ -46,15 +46,15 @@ public class MarketRequestRepository : IMarketRequestRepository
         if (request == null)
             return ResultOperation.Fail("Solicitação não encontrada");
 
-        if (request.Status != MarketReviewStatus.Pending)
+        if (request.Status != MarketStatus.Pending)
             return ResultOperation.Fail("Solicitação já processada");
 
-        request.Status = MarketReviewStatus.Approved;
+        request.Status = MarketStatus.Approved;
 
         // Aqui você pode ativar o mercado
         if (request.Market != null)
         {
-            request.Market.marketReviewStatus = MarketReviewStatus.Approved;
+            request.Market.marketReviewStatus = MarketStatus.Approved;
         }
 
         await _context.SaveChangesAsync();
@@ -70,10 +70,10 @@ public class MarketRequestRepository : IMarketRequestRepository
         if (request == null)
             return ResultOperation.Fail("Solicitação não encontrada");
 
-        if (request.Status != MarketReviewStatus.Pending)
+        if (request.Status != MarketStatus.Pending)
             return ResultOperation.Fail("Solicitação já processada");
 
-        request.Status = MarketReviewStatus.Rejected;
+        request.Status = MarketStatus.Rejected;
         request.RejectionReason = reason;
 
         await _context.SaveChangesAsync();
