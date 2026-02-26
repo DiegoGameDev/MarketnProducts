@@ -37,11 +37,11 @@ public class MarketRequestRepository : IMarketRequestRepository
         return ResultOperation<IEnumerable<MarketRequestCreation>>.Ok(requests);
     }
 
-    public async Task<ResultOperation> ApproveRequest(int requestId)
+    public async Task<ResultOperation> ApproveRequest(Guid requestId)
     {
-        var request = await _context.MarketRequestCreations
+        var request = await _context.MarketRequestCreations.Where(x => x.MarketId == requestId)
             .Include(x => x.Market)
-            .FirstOrDefaultAsync(x => x.ID == requestId);
+            .FirstOrDefaultAsync();
 
         if (request == null)
             return ResultOperation.Fail("Solicitação não encontrada");
@@ -51,21 +51,23 @@ public class MarketRequestRepository : IMarketRequestRepository
 
         request.Status = MarketStatus.Approved;
 
-        // Aqui você pode ativar o mercado
         if (request.Market != null)
         {
             request.Market.marketReviewStatus = MarketStatus.Approved;
         }
 
+        _context.MarketList.Update(request.Market);
+        _context.MarketRequestCreations.Update(request);
         await _context.SaveChangesAsync();
 
         return ResultOperation.Ok("Solicitação aprovada");
     }
 
-    public async Task<ResultOperation> RejectRequest(int requestId, string reason)
+    public async Task<ResultOperation> RejectRequest(Guid requestId, string reason)
     {
-        var request = await _context.MarketRequestCreations
-            .FirstOrDefaultAsync(x => x.ID == requestId);
+        var request = await _context.MarketRequestCreations.Where(x => x.MarketId == requestId)
+            .Include(x => x.Market)
+            .FirstOrDefaultAsync();
 
         if (request == null)
             return ResultOperation.Fail("Solicitação não encontrada");
@@ -76,8 +78,27 @@ public class MarketRequestRepository : IMarketRequestRepository
         request.Status = MarketStatus.Rejected;
         request.RejectionReason = reason;
 
+        _context.MarketList.Update(request.Market);
         await _context.SaveChangesAsync();
 
         return ResultOperation.Ok("Solicitação rejeitada");
+    }
+
+    public async Task<ResultOperation> DeleteAsyncMarket(Guid id)
+    {
+        var obj = await _context.MarketRequestCreations.FirstOrDefaultAsync(x => x.MarketId == id);
+
+        _context.MarketRequestCreations.Remove(obj);
+        await _context.SaveChangesAsync();
+
+        return ResultOperation.Ok("Historico do mercado deletado");
+    }
+
+    public async Task<ResultOperation<MarketRequestCreation>> GetMarketRequestByMarketID(Guid id)
+    {
+        var request = await _context.MarketRequestCreations.Where(x=>x.MarketId == id)
+                        .Include(x => x.Market).FirstOrDefaultAsync();
+
+        return ResultOperation<MarketRequestCreation>.Ok(request);
     }
 }

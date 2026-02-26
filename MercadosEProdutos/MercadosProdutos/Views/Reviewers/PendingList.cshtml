@@ -1,0 +1,39 @@
+@model IEnumerable<DBModel.MarketRequestCreation>
+
+@{
+    Layout = "LayoutReviewer.cshtml";
+}
+
+<h2>Pendentes</h2>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Nome</th>
+            <th>Criado por</th>
+            <th>Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var market in Model)
+    {
+        <tr>
+            <td>@market.Market.marketName</td>
+            <td>@market.Market.marketLocal</td>
+            <td>@market.CreatedAt</td>
+            <td>
+                <a class="btn btn-danger" asp-action="RejectMarket" asp-route-id="@market.MarketId">
+
+                </a>
+            </td>
+            <td>
+                <form asp-action="ApproveMarket" method="post">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="id" value="@market.MarketId" />
+                    <button class="btn btn-primary" type="submit">Aprovar</button>
+                </form>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

@@ -67,6 +67,7 @@ Acesse a URL exibida no terminal (ex: https://localhost:xxxx
 ).
 
 O programa já vai criar um usuario Admin para você já conseguir acessar
+Adicione a role de Reviewer ao usuário para ter receber email de solicitação. ltere o email do usuário para um existente (opcional)
 *Não esqueça de colocar seu email e a sua passKey para o programa ter acesso ao envio de mensagem a partir do seu email! 
 
 Faça bom uso e fique a vontade para comentar sobre o código

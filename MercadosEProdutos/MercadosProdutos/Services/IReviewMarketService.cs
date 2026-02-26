@@ -16,4 +16,7 @@ public interface IReviewMarketService
 
     Task<ResultOperation<IEnumerable<DBModel.Market>>> GetApprovedMarketListAsync();
     Task<ResultOperation<IEnumerable<DBModel.Market>>> GetRejectMarketListAsync();
+    Task<ResultOperation<IEnumerable<DBModel.MarketRequestCreation>>> GetPendingMarketListAsync();
+    Task<ResultOperation<Market>> GetMarketByID(Guid id);
+    Task<ResultOperation<MarketRequestCreation>> GetMarketRequestByID(Guid id);
 }

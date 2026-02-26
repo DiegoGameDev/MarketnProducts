@@ -17,8 +17,5 @@ namespace Repository
         Task<ResultOperation<IEnumerable<Market>>> GetRejectMarketListAsync();
         Task<ResultOperation<List<Product>>> GetProductsFromMarket(Market market);
 
-        //reviewers area
-        Task<ResultOperation> ApproveMarket(Guid marketId);
-        Task<ResultOperation> RejectMarket(Guid marketId);
     }
 }

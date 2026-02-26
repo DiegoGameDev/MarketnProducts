@@ -9,7 +9,9 @@ public interface IMarketRequestRepository
 
     Task<ResultOperation<IEnumerable<MarketRequestCreation>>> GetPendingRequests();
 
-    Task<ResultOperation> ApproveRequest(int requestId);
+    Task<ResultOperation> ApproveRequest(Guid requestId);
 
-    Task<ResultOperation> RejectRequest(int requestId, string reason);
+    Task<ResultOperation> RejectRequest(Guid requestId, string reason);
+    Task<ResultOperation> DeleteAsyncMarket(Guid id);
+    Task<ResultOperation<MarketRequestCreation>> GetMarketRequestByMarketID(Guid id);
 }

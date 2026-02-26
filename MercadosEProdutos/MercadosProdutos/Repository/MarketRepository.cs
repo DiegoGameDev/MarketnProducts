@@ -157,31 +157,6 @@ namespace Repository
             IEnumerable<Market> markets = await _context.MarketList.Where(x => x.marketReviewStatus == Enums.MarketStatus.Rejected).AsNoTracking().ToListAsync();
 
             return ResultOperation<IEnumerable<Market>>.Ok(markets, "Lista de mercados rejeitados retornadas com sucesso");
-        }
-
-        public async Task<ResultOperation> ApproveMarket(Guid marketId)
-        {
-            var market = await _context.MarketList.FirstOrDefaultAsync(x => x.ID == marketId);
-            if (market == null)
-                return ResultOperation.Fail("Market not found.");
-
-            market.marketReviewStatus = Enums.MarketStatus.Approved;
-            _context.MarketList.Update(market);
-            await _context.SaveChangesAsync();
-            return ResultOperation.Ok("Market approved successfully.");
-        }
-
-        public async Task<ResultOperation> RejectMarket(Guid marketId)
-        {
-            var market = await _context.MarketList.FirstOrDefaultAsync(x => x.ID == marketId);
-            if (market == null)
-                return ResultOperation.Fail("Market not found.");
-
-            market.marketReviewStatus = Enums.MarketStatus.Rejected;
-            _context.MarketList.Update(market);
-            await _context.SaveChangesAsync();
-            return ResultOperation.Ok("Market rejected successfully.");
-        }
-        
+        }        
     }
 }

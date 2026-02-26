@@ -5,7 +5,6 @@ using Helper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Services;
 using Microsoft.AspNetCore.DataProtection;
 
@@ -29,6 +28,7 @@ builder.Services.AddIdentity<User, IdentityRole>()
 builder.Services.ConfigureApplicationCookie(opt =>
 {
    opt.LoginPath = "/Login"; 
+   opt.AccessDeniedPath = "/MarketPlace/Index";
 });
 
 builder.Services.AddTransient<IEmailSender, EmailSender>(); // adicionando o enviador de email na service
@@ -52,7 +52,10 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IMarketSession, MarketSession>();
 builder.Services.AddScoped<IMarketAssociatedRepository, MarketAssociatedRepository>();
 builder.Services.AddScoped<IMarketRequestRepository, MarketRequestRepository>();
+
+//Services
 builder.Services.AddScoped<IMarketAppService, MarketAppService>();
+builder.Services.AddScoped<IReviewMarketService, ReviewMarketService>();
 
 
 builder.Services.AddSession(x =>
