@@ -3,7 +3,7 @@ using Results;
 
 namespace Services;
 
-public interface IMarketAppService
+public interface IMyMarketService
 {
     Task<ResultOperation<IEnumerable<Market>>> GetMarketsByUserApproved(string userId);
     Task<ResultOperation<Market>> GetMarketById(Guid id);

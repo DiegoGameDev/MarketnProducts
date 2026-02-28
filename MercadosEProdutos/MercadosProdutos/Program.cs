@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Services;
 using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +16,8 @@ builder.Services.AddControllersWithViews();
 
 
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+builder.Services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
+
 // definindo a rota junto ao banco de dados no serviço
 var connectionString = builder.Configuration.GetConnectionString("DatabaseConnection");
 
@@ -54,8 +57,9 @@ builder.Services.AddScoped<IMarketAssociatedRepository, MarketAssociatedReposito
 builder.Services.AddScoped<IMarketRequestRepository, MarketRequestRepository>();
 
 //Services
-builder.Services.AddScoped<IMarketAppService, MarketAppService>();
+builder.Services.AddScoped<IMyMarketService, MyMarketService>();
 builder.Services.AddScoped<IReviewMarketService, ReviewMarketService>();
+builder.Services.AddScoped<ILoginAppService, LoginAppService>();
 
 
 builder.Services.AddSession(x =>

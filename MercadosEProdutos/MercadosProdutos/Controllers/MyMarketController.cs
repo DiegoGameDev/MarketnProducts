@@ -13,9 +13,9 @@ namespace MercadosProdutos.Controllers;
 public class MyMarketController : Controller
 {
     private readonly IMarketSession _session;
-    private readonly IMarketAppService _service;
+    private readonly IMyMarketService _service;
 
-    public MyMarketController(IMarketSession session, IMarketAppService service)
+    public MyMarketController(IMarketSession session, IMyMarketService service)
     {
         _session = session;
         _service = service;

@@ -17,5 +17,10 @@
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Reviewers" action="Index">Área de Análise</a>
                             </li>
                         }
+                        @if (@Model != null){
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Login" asp-action="Logout">Sair de (@Model.UserName)</a>
+                            </li>
+                        }
                     </ul>
                 </div>

@@ -7,6 +7,8 @@
 
 <div class="container d-flex justify-content-center align-items-center" style="min-height: 80vh;">
 
+        
+    <div class="card shadow p-4" style="width: 100%; max-width: 420px;">
     @if (TempData["ErroMSG"] != null)
         {
             <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -21,8 +23,6 @@
                 @TempData["SucessoMSG"]
             </div>
         }
-        
-    <div class="card shadow p-4" style="width: 100%; max-width: 420px;">
 
         <h2 class="text-center mb-3">Login</h2>
 
