@@ -36,7 +36,8 @@ public class MarketPlaceController : Controller
         var mktView = new MarketViewModel()
         {
             Name = market.Data.marketName,
-            Location = market.Data.marketLocal
+            Location = market.Data.marketLocal,
+            description = market.Data.description,
         };
 
         foreach (var i in products.Data)

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Filter;
 using Services;
 using DBModel;
+using Enums;
 
 namespace MercadosProdutos.Controllers;
 
@@ -62,6 +63,8 @@ public class ReviewersController : Controller
     {
         var request = await _service.GetMarketRequestByID(id);
 
+        request.Data.Status = MarketStatus.Rejected;
+
         return View(request.Data);
     }
     #endregion
@@ -69,19 +72,38 @@ public class ReviewersController : Controller
     #region Post Methods
 
     [HttpPost]
-    public IActionResult ConfirmDelete(MarketRequestCreation marketRequestCreation)
+    public async Task<IActionResult> ConfirmDelete(MarketRequestCreation marketRequestCreation)
     {
-        _service.RemoveMarket(marketRequestCreation.MarketId, marketRequestCreation.RejectionReason);
+        if (!ModelState.IsValid)
+        {
+            foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
+            {
+                Console.WriteLine(error.ErrorMessage);
+            }
+
+            TempData["ErroMSG"] = "O mercado não foi removido.";
+            return RedirectToAction("DeleteMarket", new { id = marketRequestCreation.MarketId });
+        }
+
+        await _service.RemoveMarket(marketRequestCreation.MarketId, marketRequestCreation.RejectionReason);
         TempData["SucessoMSG"] = "O mercado foi removido com sucesso.";
         return RedirectToAction("PendingList");
     }
 
     [HttpPost]
-    public IActionResult ConfirmReject(MarketRequestCreation marketRequestCreation)
+    public async Task<IActionResult> ConfirmReject(MarketRequestCreation marketRequestCreation)
     {
-        _service.RejectMarket(marketRequestCreation.MarketId, marketRequestCreation.RejectionReason);
-        TempData["SucessoMSG"] = "O mercado foi rejeitado com sucesso.";
-        return RedirectToAction("PendingList");
+        var result = await _service.RejectMarket(marketRequestCreation.MarketId, marketRequestCreation.RejectionReason);
+
+        if (result.Success)
+        {
+            TempData["SucessoMSG"] = "O mercado foi rejeitado com sucesso.";
+        }
+        else
+        {
+            TempData["ErroMSG"] = $"O mercado não foi rejeitado: {result.Message}";
+        }
+        return RedirectToAction("RejectedList");
     }
 
     [HttpPost]

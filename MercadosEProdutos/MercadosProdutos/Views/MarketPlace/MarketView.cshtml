@@ -9,6 +9,8 @@
     <!-- Título da loja -->
     <h1 class="text-center mb-2">@Model.Name</h1>
 
+    <p class="text-center text-muted">@Model.description</p>
+
     <!-- Localização -->
     <p class="text-center text-muted">
         <span>@Model.Location</span>
@@ -28,9 +30,6 @@
                         <div class="card-body">
                             <h5 class="card-title">@product.Name</h5>
                             <p class="card-text">Preço: @product.Price.ToString("C")</p>
-                        </div>
-                        <div class="card-footer text-center">
-                            <button class="btn btn-primary">Comprar</button>
                         </div>
                     </div>
                 </div>

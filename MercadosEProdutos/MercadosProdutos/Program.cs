@@ -65,11 +65,6 @@ builder.Services.AddSession(x =>
 }
 );
 
-builder.Services.Configure<SessionOptions>(options =>
-{
-    options.IdleTimeout = TimeSpan.FromMinutes(2);
-});
-
 var app = builder.Build();
 
 #region  CreateFirstAdminUser

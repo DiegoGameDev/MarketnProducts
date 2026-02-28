@@ -10,6 +10,6 @@ public class MarketRequestCreation
 
     public MarketStatus Status {get; set;}
     public string? RejectionReason {get; set;}
-    public DateTime CreatedAt {get; set;}
-    public DateTime UpdateDate {get; set;}
+    public DateTime? CreatedAt {get; set;}
+    public DateTime? UpdateDate {get; set;}
 }

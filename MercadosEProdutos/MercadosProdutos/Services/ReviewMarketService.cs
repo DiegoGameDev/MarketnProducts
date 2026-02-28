@@ -32,7 +32,7 @@ public class ReviewMarketService : IReviewMarketService
 
         if (ownerMarket.Success)
         {
-            await ApprovedEmailToMarketOwner(marketId, ownerMarket.Data.Market, ownerMarket.Data.User);
+            await ApprovedEmailToMarketOwner(ownerMarket.Data.Market, ownerMarket.Data.User);
         }
 
         return result;
@@ -40,13 +40,14 @@ public class ReviewMarketService : IReviewMarketService
     public async Task<ResultOperation> RejectMarket(Guid marketId, string reason)
     {
         var result = await _marketRequestRepository.RejectRequest(marketId, reason);
+        Console.WriteLine(result.Message);
 
         var ownerMarket = await _marketAssociatedRepository.GetMarketAssociatedByMarketID(marketId);
 
-        if (ownerMarket.Success)
+        if (ownerMarket.Success && result.Success)
         {
-                await RejectedEmailToMarketOwner(marketId, ownerMarket.Data.Market, ownerMarket.Data.User, reason);
-            }
+            await RejectedEmailToMarketOwner(ownerMarket.Data.Market, ownerMarket.Data.User, reason);
+        }
 
         return result;
     }
@@ -60,7 +61,7 @@ public class ReviewMarketService : IReviewMarketService
 
     public async Task<ResultOperation<IEnumerable<Market>>> GetRejectMarketListAsync()
     {
-        var result = await _marketRepository.GetRejectMarketListAsync();
+        var result = await _marketRequestRepository.GetRejectRequests();
 
         return result;
     }
@@ -68,20 +69,19 @@ public class ReviewMarketService : IReviewMarketService
 
     public async Task<ResultOperation> RemoveMarket(Guid marketId, string reason)
     {
-        var result = await _marketRepository.DeleteAsync(marketId);
-        await _marketRequestRepository.DeleteAsyncMarket(marketId);
-
         var ownerMarket = await _marketAssociatedRepository.GetMarketAssociatedByMarketID(marketId);
+        var result = await _marketRepository.DeleteAsync(marketId);
+
 
         if (ownerMarket.Success)
         {
-            await RemoveEmailToMarketOwner(marketId, ownerMarket.Data.Market, ownerMarket.Data.User, reason);
+            await RemoveEmailToMarketOwner(ownerMarket.Data.Market, ownerMarket.Data.User, reason);
         }
 
         return result;
     }
 
-    public async Task<ResultOperation> ApprovedEmailToMarketOwner(Guid marketId, Market market, User user)
+    public async Task<ResultOperation> ApprovedEmailToMarketOwner(Market market, User user)
     {
         string path = Path.Combine(_environment.ContentRootPath, "Email templates", "MarketApproved.html");
 
@@ -96,7 +96,7 @@ public class ReviewMarketService : IReviewMarketService
         return ResultOperation.Ok();
     }
 
-    public async Task<ResultOperation> RejectedEmailToMarketOwner(Guid marketId, Market market, User user, string reason)
+    public async Task<ResultOperation> RejectedEmailToMarketOwner(Market market, User user, string reason)
     {
         string path = Path.Combine(_environment.ContentRootPath, "Email templates", "MarketRejected.html");
 
@@ -110,7 +110,7 @@ public class ReviewMarketService : IReviewMarketService
         return ResultOperation.Ok();
     }
 
-    public async Task<ResultOperation> RemoveEmailToMarketOwner(Guid marketId, Market market, User user, string reason)
+    public async Task<ResultOperation> RemoveEmailToMarketOwner(Market market, User user, string reason)
     {
         string path = Path.Combine(_environment.ContentRootPath, "Email templates", "MarketRemoved.html");
 
