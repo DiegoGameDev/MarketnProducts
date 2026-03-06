@@ -42,7 +42,7 @@ public class MarketPlaceController : Controller
 
         foreach (var i in products.Data)
         {
-            mktView.Products.Add(new ProductViewModel(i.productName,i.productPrice, "/Resources/mine.png"));
+            mktView.Products.Add(i.ToViewModel());
         }
 
         return View(mktView);

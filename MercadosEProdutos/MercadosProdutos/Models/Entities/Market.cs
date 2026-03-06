@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Enums;
 using Microsoft.AspNetCore.SignalR;
 
@@ -22,6 +23,11 @@ public class Market
     public string cnpj {get; set;}
     [Required]
     public MarketStatus marketReviewStatus {get; set;}
+
+
+    public string? imagePath {get; set;}
+    [NotMapped]
+    public IFormFile image {get; set;}
 
     public MarketRequestCreation? marketRequestCreation {get; set;}
 

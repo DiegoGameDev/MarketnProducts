@@ -1,5 +1,6 @@
 using DBModel;
 using Results;
+using ViewModels;
 
 namespace Services;
 
@@ -9,6 +10,8 @@ public interface IMyMarketService
     Task<ResultOperation<Market>> GetMarketById(Guid id);
     Task<ResultOperation> CreateMarketWithRequest(Market market, User userId);
     Task<ResultOperation> UpdateMarket(Market market);
+
+    Task<ResultOperation> SendRequestToDelete(Guid id, User user, string reason);
 
     Task<ResultOperation<ICollection<Product>>> GetProductsInMarket(Guid market);
     Task<ResultOperation<Product>> GetProductById(int id);

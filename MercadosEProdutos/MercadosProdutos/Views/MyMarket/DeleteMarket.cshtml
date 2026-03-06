@@ -1,0 +1,17 @@
+@using ViewModels;
+@model MarketDeleteView
+
+<div class="container mt-5">
+    <h2>Solicitar exclusão do mercado</h2>
+    <p>Tem certeza de que deseja solicitar a exclusão do mercado <strong>@Model.Name</strong>? Esta ação não pode ser desfeita e será revisada pela equipe de suporte.</p>
+
+    <form asp-action="SendRequestToDelete" method="post">
+        <input type="hidden" asp-for="Id" />
+        <div class="mb-3">
+            <label for="reason" class="form-label">Motivo para exclusão:</label>
+            <textarea class="form-control" id="reason" name="Reason" rows="4" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-danger">Enviar solicitação de exclusão</button>
+        <a asp-action="MyMarkets" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>

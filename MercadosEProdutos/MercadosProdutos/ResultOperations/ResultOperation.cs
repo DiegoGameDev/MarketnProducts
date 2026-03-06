@@ -5,8 +5,6 @@ public class ResultOperation<T>
     public bool Success;
     public string Message;
 
-    public string title;
-
     public T Data;
 
     public static ResultOperation<T> Ok(T data, string message = null)
@@ -34,14 +32,6 @@ public class ResultOperation
     public bool Success;
     public string Message;
 
-    public string title;
-    private bool v1;
-    private string v2;
-
-    public ResultOperation()
-    {
-       
-    }
 
     public static ResultOperation Ok(string message = null)
         {

@@ -60,6 +60,7 @@ builder.Services.AddScoped<IMarketRequestRepository, MarketRequestRepository>();
 builder.Services.AddScoped<IMyMarketService, MyMarketService>();
 builder.Services.AddScoped<IReviewMarketService, ReviewMarketService>();
 builder.Services.AddScoped<ILoginAppService, LoginAppService>();
+builder.Services.AddScoped<INotificationService, NotificationService>();
 
 
 builder.Services.AddSession(x =>
@@ -80,6 +81,12 @@ using (var scope = app.Services.CreateScope())
 
     string email = "admin@market.com";
     string password = "Admin123!";
+
+    var listRoles = roleManager.Roles.ToList();
+    if (listRoles.Count == 0 || listRoles == null)
+    {
+        Console.WriteLine("Nenhuma role encontrada. Criando roles padrão...");
+    }
 
     // Criar role se não existir
     if (!await roleManager.RoleExistsAsync("Admin"))
@@ -138,9 +145,9 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseRouting();
 
-app.UseSession();
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseSession();
 
 app.MapStaticAssets();
 
@@ -151,3 +158,4 @@ app.MapControllerRoute(
 
 
 app.Run();
+Console.ReadLine();

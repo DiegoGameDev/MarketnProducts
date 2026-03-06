@@ -34,7 +34,7 @@
 
             <h4 class="mb-3">Informações da Loja</h4>
 
-            <form asp-action="UpdateMarket" asp-controller="MyMarket" method="post">
+            <form asp-action="UpdateMarket" asp-controller="MyMarket" method="post" enctype="multipart/form-data">
 
                 <input type="hidden" asp-for="ID" />
 
@@ -49,8 +49,35 @@
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label">Localização</label>
-                    <input asp-for="marketLocal" class="form-control" />
+                    <label class="form-label">Selecione o estado da sua loja</label>
+                    <select class="form-select" aria-label="Default select example" asp-for="marketLocal">
+                        <option value="AC">Acre</option>
+                        <option value="AL">Alagoas</option>
+                        <option value="AP">Amapá</option>
+                        <option value="AM">Amazonas</option>
+                        <option value="BA">Bahia</option>
+                        <option value="CE">Ceará</option>
+                        <option value="ES">Espírito Santo</option>
+                        <option value="GO">Goiás</option>
+                        <option value="MA">Maranhão</option>
+                        <option value="MT">Mato Grosso</option>
+                        <option value="MS">Mato Grosso do Sul</option>
+                        <option value="MG">Minas Gerais</option>
+                        <option value="PA">Pará</option>
+                        <option value="PB">Paraíba</option>
+                        <option value="PR">Paraná</option>
+                        <option value="PE">Pernambuco</option>
+                        <option value="PI">Piauí</option>
+                        <option value="RJ">Rio de Janeiro</option>
+                        <option value="RN">Rio Grande do Norte</option>
+                        <option value="RS">Rio Grande do Sul</option>
+                        <option value="RO">Rondônia</option>
+                        <option value="RR">Roraima</option>
+                        <option value="SC">Santa Catarina</option>
+                        <option value="SP">São Paulo</option>
+                        <option value="SE">Sergipe</option>
+                        <option value="TO">Tocantins</option>
+                    </select>
                 </div>
 
                 <div class="mb-3">
@@ -61,6 +88,11 @@
                 <div class="mb-3">
                     <label class="form-label">CNPJ</label>
                     <input asp-for="cnpj" class="form-control" />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label" for="imageUpload">Insira a imagem do mercado</label>
+                    <input type="file" class="form-control" asp-for="image" accept="image/*" />
                 </div>
 
                 <button type="submit" class="btn btn-success w-100">
@@ -102,7 +134,7 @@
 
                     <div class="card shadow-sm h-100">
 
-                        <img src="/Resources/products/@(product.ID + ".png")"
+                        <img src="@product.imagePath"
                              class="card-img-top"
                              style="height: 180px; object-fit: cover;" />
 
@@ -144,5 +176,13 @@
 
         </div>
     }
+
+    <div>
+        <a asp-action="DeleteMarket"
+           asp-route-id="@Model.ID"
+           class="btn btn-outline-danger w-100">
+            Solicitar exclusão da loja
+        </a>
+    </div>
 
 </div>

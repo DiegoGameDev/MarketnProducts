@@ -57,11 +57,11 @@
             @foreach (var market in Model)
             {
                 <div class="col-md-4 mb-4">
-                    <div class="card shadow-sm h-100">
+                    <div class="card shadow-sm h-150 d-flex flex-column">
 
-                        <img src="/Resources/markets/@(market.ID.ToString()+".png")"
+                        <img src="@market.imagePath"
                              class="card-img-top"
-                             style="height: 180px; object-fit: cover;" />
+                             style="height: 200px; object-fit: cover;" />
 
                         <div class="card-body d-flex flex-column">
 

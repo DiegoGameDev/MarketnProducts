@@ -1,10 +1,11 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Helper;
+using marketView = ViewModels.MarketView;
 using Services;
-using marketView = ViewModels.Market;
 using Filter;
-using DBModel; // model market apenas para form
+using DBModel;
+using MarketDeleteView = ViewModels.MarketDeleteView;
 
 namespace MercadosProdutos.Controllers;
 
@@ -58,24 +59,53 @@ public class MyMarketController : Controller
     {
         return View(modelForm);
     }
+
+    [HttpGet]
+    public async Task<IActionResult> DeleteMarket(Guid id)
+    {
+        var market = await _service.GetMarketById(id);
+        MarketDeleteView marketDeleteView = new MarketDeleteView()
+        {
+            Id = market.Data.ID,
+            Name = market.Data.marketName
+        };
+
+        return View(marketDeleteView);
+    }
     #endregion
 
     #region  MarketPostMethods
 
     [HttpPost]
-    public async Task<IActionResult> SendResquestMarketCreation(marketView modelForm)
+    public async Task<IActionResult> SendResquestMarketCreation(Market modelForm)
     {
          if (!ModelState.IsValid)
             return View("Create", modelForm);
 
         var user = _session.GetSession();
 
-        var result = await _service.CreateMarketWithRequest(modelForm.ToModel(), user);
+        var result = await _service.CreateMarketWithRequest(modelForm, user);
 
         if (!result.Success)
         {
             TempData["ErroMSG"] = result.Message;
             return View("Create", modelForm);
+        }
+
+        TempData["SucessoMSG"] = result.Message;
+        return RedirectToAction("Index");
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> SendRequestToDelete(MarketDeleteView obj)
+    {
+        User user = _session.GetSession();
+        var result = await _service.SendRequestToDelete(obj.Id, user, obj.Reason);
+
+        if (!result.Success)
+        {
+            TempData["ErroMSG"] = result.Message;
+            return RedirectToAction("Index");
         }
 
         TempData["SucessoMSG"] = result.Message;
@@ -99,7 +129,6 @@ public class MyMarketController : Controller
             return View("Edit", modelForm);
         }
 
-        modelForm.marketReviewStatus = Enums.MarketStatus.Approved;
         var result = await _service.UpdateMarket(modelForm);
 
         if (!result.Success)
@@ -118,7 +147,10 @@ public class MyMarketController : Controller
     [HttpGet]
     public async Task<IActionResult> CreateProduct(Guid marketId)
     {
-        return View("CreateProduct",new Product(){MarketID = marketId});
+        return View(new Product()
+        {
+            MarketID = marketId
+        });
     }
 
     [HttpGet]
@@ -155,22 +187,36 @@ public class MyMarketController : Controller
         return RedirectToAction("Edit", new { id = model.MarketID });
     }
 
-    [HttpPut]
+    [HttpPost]
     public async Task<IActionResult> EditProductConfirm(Product model)
     {
+        if (!ModelState.IsValid)
+        {
+            foreach (var key in ModelState.Keys)
+            {
+                var errors = ModelState[key].Errors;
+                foreach (var error in errors)
+                {
+                    Console.WriteLine($"Erro na chave '{key}': {error.ErrorMessage}");
+                }
+            }
+
+            return View("EditProduct", model);
+        }
+
         var result = await _service.EditProduct(model);
 
         if (!result.Success)
         {
             TempData["ErroMSG"] = result.Message;
-            return RedirectToAction("EditProduct", model);
+            return RedirectToAction("EditProduct", new { id = model.ID });
         }
 
         TempData["SucessoMSG"] = result.Message;
         return RedirectToAction("Edit", new { id = model.MarketID });
     }
 
-    [HttpPost]
+    [HttpDelete]
     public async Task<IActionResult> DeleteProductConfirm(Product model)
     {
         var result = await _service.DeleteProduct(model.MarketID, model.ID);

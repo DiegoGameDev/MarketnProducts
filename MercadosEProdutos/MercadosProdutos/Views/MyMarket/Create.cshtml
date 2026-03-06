@@ -1,4 +1,4 @@
-@using ViewModels
+@using DBModel
 @model Market
 
 <div class="container mt-5" style="max-width: 600px;">
@@ -21,7 +21,11 @@
         </div>
     }
 
-    <form asp-controller="MyMarket" asp-action="SendResquestMarketCreation" method="post">
+    <form asp-controller="MyMarket" asp-action="SendResquestMarketCreation" method="post" enctype="multipart/form-data">
+
+        <div>
+            <input type="hidden" asp-for="ID" />
+        </div>
 
         <div class="mb-3">
             <label class="form-label">Nome da loja</label>
@@ -77,6 +81,11 @@
             <label class="form-label">CNPJ</label>
             <input asp-for="cnpj" class="form-control" placeholder="xx.xxx.xxx/xxxx-xx" />
             @Html.ValidationMessageFor(x => x.cnpj)
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label" for="imageUpload">Insira a imagem do mercado</label>
+            <input type="file" class="form-control" asp-for="image" accept="image/*" />
         </div>
 
         <button type="submit" class="btn btn-dark w-100">

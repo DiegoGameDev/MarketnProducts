@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Solicitação para deletar mercado</title>
+</head>
+<body style="font-family: Arial, sans-serif; background-color:#f4f4f4; padding:20px;">
+    
+    <div style="max-width:600px; margin:auto; background:#ffffff; padding:20px; border-radius:8px;">
+        
+        <h2 style="color:#424242;">⚠️ Mercado Removido</h2>
+        
+        <p>Solicitado por <strong>{{userName}}</strong>,</p>
+
+        <p>O mercado <strong>{{marketName}}</strong> foi solicitado para exclusão.</p>
+
+        <p><strong>Motivo:</strong></p>
+        <p style="background:#eeeeee; padding:10px; border-radius:5px;">
+            {{reason}}
+        </p>
+
+        <p>Se você acredita que isso foi um erro, entre em contato com nossa equipe.</p>
+
+        <br>
+
+        <a href="{{supportLink}}" 
+           style="display:inline-block; padding:10px 15px; background:#424242; color:#fff; text-decoration:none; border-radius:5px;">
+           Falar com suporte
+        </a>
+
+        <br><br>
+
+        <p style="font-size:12px; color:#888;">Equipe Market</p>
+    </div>
+
+</body>
+</html>
