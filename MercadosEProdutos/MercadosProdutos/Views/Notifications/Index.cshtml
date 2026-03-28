@@ -1,0 +1,24 @@
+﻿@using DBModel
+@model IEnumerable<Alert>
+@{
+	
+}
+
+<div>
+	@if (@Model != null && @Model.Count() > 0)
+		@foreach(var i in Model)
+		{
+			<div class="card card-body card-text">
+				<form asp-action="IsRead" asp-controller="Notifications" method="post">
+					<input type="hidden" name="id" value="@i.ID" />
+
+					<label class="">@i.Title</label>
+					<label>@i.Message</label>
+
+					@if (!i.IsRead){
+						<button type="submit"></button>
+					}
+				</form>
+			</div>
+		}
+</div>

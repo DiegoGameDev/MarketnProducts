@@ -11,15 +11,21 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="MyMarket" asp-action="Index">Meu Mercado</a>
                         </li>
-                        @if (@Model.userType == Enums.UserType.Reviewer || @Model.userType == Enums.UserType.Admin)
+                        @if (User.IsInRole("Reviewer") || User.IsInRole("Admin"))
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Reviewers" action="Index">Área de Análise</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Reviewers" asp-action="Index">Área de Análise</a>
+                            </li>
+                        }
+                        @if (@Model != null)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Notifications" asp-action="Index">Notificações</a>
                             </li>
                         }
                         @if (@Model != null){
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Login" asp-action="Logout">Sair de (@Model.UserName)</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Login" asp-action="Logout">Sair</a>
                             </li>
                         }
                     </ul>

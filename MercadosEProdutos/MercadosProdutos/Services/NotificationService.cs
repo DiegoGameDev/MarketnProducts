@@ -20,31 +20,108 @@ public class NotificationService : INotificationService
         _context = context;
     }
 
-    public async Task<ResultOperation> NotifyReviewers(Notification notification)
+    public async Task<ResultOperation> MarkIsRead(int id)
+    {
+        Alert alert = await _context.Alert.FirstOrDefaultAsync(x => x.ID == id);
+
+        try
+        {
+            alert.IsRead = true;
+            _context.Update(alert);
+            await _context.SaveChangesAsync();
+
+            return ResultOperation.Ok("Notificação já foi lida, pelo usuário");
+        }
+        catch (DbUpdateException ex)
+        {
+            return ResultOperation.Fail("Notificação já foi lida, pelo usuário" + ex.InnerException?.Message);
+        }
+        
+    }
+
+    public async Task<ResultOperation<IEnumerable<Alert>>> NotificationsOfUser(User user)
+    {
+        var notifications = await _context.Alert.Where(x => x.TargetID == user.Id).ToListAsync();
+
+        if (notifications == null)
+            return ResultOperation<IEnumerable<Alert>>.Fail("Usuario não tem notificação ou usuário não existe");
+
+        return ResultOperation<IEnumerable<Alert>>.Ok(notifications, "Notificações encontradas");
+    }
+
+    public async Task<ResultOperation> NotifyReviewers(Alert notification)
     {
         var reviewers = await _userManager.GetUsersInRoleAsync("Reviewer");
 
         if (!reviewers.Any())
             return ResultOperation.Fail("Nenhum reviewer encontrado");
 
-        var notifications = reviewers.Select(r => new Notification
+        try
         {
-            UserID = notification.UserID, // autor
-            TargetID = r.Id,              // destinatário
-            Title = notification.Title,
-            Content = notification.Content,
-            IsRead = false,
-            CreatedAt = DateTime.UtcNow
-        }).ToList();
+            var notifications = reviewers.Select(r => new Alert
+            {
+                UserID = notification.UserID, // autor
+                TargetID = r.Id,              // destinatário
+                Title = notification.Title,
+                Message = notification.Message,
+                IsRead = false,
+                CreatedAt = DateTime.UtcNow
+            }).ToList();
 
-        await _context.Notifications.AddRangeAsync(notifications);
-        await _context.SaveChangesAsync();
+            await _context.Alert.AddRangeAsync(notifications);
+            await _context.SaveChangesAsync();
+        }
+        catch (DbUpdateException ex)
+        {
+            return ResultOperation.Fail($"Erro ao salvar notificações: {ex.InnerException?.Message}");
+        }
 
         return ResultOperation.Ok("Os analisadores receberam a notificação no app");
     }
 
-    public Task<ResultOperation> NotifyUsers(Notification notification)
+    public async Task<ResultOperation> NotifyUser(Alert notification)
     {
-        throw new NotImplementedException();
+        var user = await _userManager.Users.Where(x => x.Id == notification.TargetID).FirstOrDefaultAsync();
+
+        if (user == null)
+            return ResultOperation.Fail("Usuário destinatário não encontrado");
+        
+        notification.CreatedAt = DateTime.UtcNow;
+        notification.IsRead = false;
+
+        await _context.Alert.AddAsync(notification);
+        await _context.SaveChangesAsync();
+
+        return ResultOperation.Ok("Notificação enviada ao usuário");
+    }
+
+    public async Task<ResultOperation> NotifyUsers(Alert notification)
+    {
+        var users = await _userManager.GetUsersInRoleAsync("Default");
+
+        if (!users.Any())
+            return ResultOperation.Fail("Nenhum usuário encontrado");
+
+        try
+        {
+            var notifications = users.Select(r => new Alert
+            {
+                UserID = notification.UserID, // autor
+                TargetID = r.Id,              // destinatário
+                Title = notification.Title,
+                Message = notification.Message,
+                IsRead = false,
+                CreatedAt = DateTime.UtcNow
+            }).ToList();
+
+            await _context.Alert.AddRangeAsync(notifications);
+            await _context.SaveChangesAsync();
+        }
+        catch (DbUpdateException ex)
+        {
+            return ResultOperation.Fail($"Erro ao salvar notificações: {ex.InnerException?.Message}");
+        }
+
+        return ResultOperation.Ok("Os analisadores receberam a notificação no app");
     }
 }

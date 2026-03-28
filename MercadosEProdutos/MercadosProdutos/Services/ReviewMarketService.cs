@@ -13,15 +13,18 @@ public class ReviewMarketService : IReviewMarketService
     private readonly IMarketRequestRepository _marketRequestRepository;
     private readonly IEmailSender _emailSender;
     private readonly IWebHostEnvironment _environment;
+    private readonly INotificationService _notificationService;
 
     public ReviewMarketService(IMarketRepository marketRepository, IMarketAssociatedRepository marketAssociatedRepository, IEmailSender emailSender, IWebHostEnvironment environment
-    , IMarketRequestRepository marketRequestRepository)
+    , IMarketRequestRepository marketRequestRepository,
+    INotificationService notificationService)
     {
         _emailSender = emailSender;
         _marketRepository = marketRepository;
         _marketAssociatedRepository = marketAssociatedRepository;
         _environment = environment;
         _marketRequestRepository = marketRequestRepository;
+        _notificationService = notificationService;
     }
 
     public async Task<ResultOperation> ApproveMarket(Guid marketId)
@@ -33,6 +36,17 @@ public class ReviewMarketService : IReviewMarketService
         if (ownerMarket.Success)
         {
             await ApprovedEmailToMarketOwner(ownerMarket.Data.Market, ownerMarket.Data.User);
+
+            Alert notificationObject = new Alert
+            {
+                UserID = "System",
+                TargetID = ownerMarket.Data.UserID,
+                Title = "Mercado Aprovado",
+                Message = $"O seu mercado {ownerMarket.Data.Market.marketName} foi aprovado! Você já pode começar a cadastrar seus produtos e gerenciar seu mercado.",
+                CreatedAt = DateTime.UtcNow,
+                IsRead = false
+            };
+            await _notificationService.NotifyUser(notificationObject);
         }
 
         return result;
@@ -47,6 +61,17 @@ public class ReviewMarketService : IReviewMarketService
         if (ownerMarket.Success && result.Success)
         {
             await RejectedEmailToMarketOwner(ownerMarket.Data.Market, ownerMarket.Data.User, reason);
+
+            Alert notificationObject = new Alert
+            {
+                UserID = "System",
+                TargetID = ownerMarket.Data.UserID,
+                Title = "Mercado Rejeitado",
+                Message = $"O seu mercado {ownerMarket.Data.Market.marketName} foi rejeitado. Motivo: {reason}",
+                CreatedAt = DateTime.UtcNow,
+                IsRead = false
+            };
+            await _notificationService.NotifyUser(notificationObject);
         }
 
         return result;
@@ -76,6 +101,17 @@ public class ReviewMarketService : IReviewMarketService
         if (ownerMarket.Success)
         {
             await RemoveEmailToMarketOwner(ownerMarket.Data.Market, ownerMarket.Data.User, reason);
+
+            Alert notificationObject = new Alert
+            {
+                UserID = "System",
+                TargetID = ownerMarket.Data.UserID,
+                Title = "Mercado Removido",
+                Message = $"O seu mercado {ownerMarket.Data.Market.marketName} foi removido. Motivo: {reason}",
+                CreatedAt = DateTime.UtcNow,
+                IsRead = false
+            };
+            await _notificationService.NotifyUser(notificationObject);
         }
 
         return result;

@@ -1,8 +1,6 @@
-using DBContext;
 using DBModel;
 using Enums;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.EntityFrameworkCore;
 using Results;
 
@@ -39,7 +37,7 @@ public class UserRepository : IUserRepository
             return ResultOperation<User>.Fail("Falha na criação do usuario: " + $"{result.Errors.ElementAt(0).Description}");
         }
 
-        var userResult = await GetByLoginAsync(user.Email);
+        await _userManager.AddToRoleAsync(user, "Default");
 
         return ResultOperation<User>.Ok(user);
     }

@@ -243,9 +243,9 @@ public class MyMarketService : IMyMarketService
 
             return ResultOperation.Ok("Produto criado com sucesso");
         }
-        catch (DbUpdateException ex)
+        catch
         {
-            return ResultOperation.Fail(ex.InnerException.Message);
+            return ResultOperation.Fail("ex.InnerException.Message");
         }
     }
 
@@ -366,16 +366,16 @@ public class MyMarketService : IMyMarketService
                     await _emailSender.SendEmailAsync(i.Email, "Solicitação para deletar mercado", htmlMessage: html);
                 }
 
-            
-        Notification notification = new Notification()
-        {
-            UserID = user.Id,
-            Title = "Solicatação de exclusão",
-            Content = $"O usuario: {user.UserName} deseja excluir o mercado: {market.Data.marketName}. Motivo: {reason}",
-            CreatedAt = DateTime.UtcNow
-        };
-        var resultNotifications = await _notificationService.NotifyReviewers(notification: notification);
-        //Console.WriteLine(resultNotifications.Message);
+
+            Alert notification = new Alert()
+            {
+                UserID = user.Id,
+                Title = "Solicatação de exclusão",
+                Message = $"O usuario: {user.UserName} deseja excluir o mercado: {market.Data.marketName}. Motivo: {reason}",
+                CreatedAt = DateTime.UtcNow
+            };
+            var resultNotifications = await _notificationService.NotifyReviewers(notification: notification);
+            Console.WriteLine(resultNotifications.Message);
         }
         catch (System.Exception ex)
         {

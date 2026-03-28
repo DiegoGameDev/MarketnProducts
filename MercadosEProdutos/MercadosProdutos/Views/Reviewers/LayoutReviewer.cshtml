@@ -29,6 +29,17 @@
                             <a class="nav-link" asp-controller="Reviewers" asp-action="Index">Área de Análise</a>
                         </li>
                     }
+                        @if (@User != null)
+                        {
+                            <li class="nav-item right">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Notifications" asp-action="Index">Notificações</a>
+                            </li>
+                        }
+                    @if (User != null){
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Login" asp-action="Logout">Sair</a>
+                            </li>
+                        }
                 </ul>
             </div>
         </div>

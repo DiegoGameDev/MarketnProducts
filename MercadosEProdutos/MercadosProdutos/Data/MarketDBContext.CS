@@ -16,7 +16,6 @@ public class MarketDBContext : IdentityDbContext<User>
         builder.Entity<Market>().ToTable("Market");
         builder.Entity<MarketAssociated>().ToTable("MarketAssociated");
         builder.Entity<MarketRequestCreation>().ToTable("MarketRequestList");
-        builder.Entity<Notification>().ToTable("Notifications");
 
 
         builder.Entity<MarketAssociated>().HasOne(x => x.Market).WithMany(m => m.MarketAssociatedList)
@@ -37,6 +36,6 @@ public class MarketDBContext : IdentityDbContext<User>
     public DbSet<Product> ProductList {get; set;}
     public DbSet<MarketAssociated> MarketAssociatedList {get; set;}
     public DbSet<MarketRequestCreation> MarketRequestCreations {get; set;}
-    public DbSet<Notification> Notifications {get; set;}
+    public DbSet<Alert> Alert { get; set; }
 
 }

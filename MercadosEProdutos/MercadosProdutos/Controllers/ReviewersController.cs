@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Filter;
 using Services;
 using DBModel;
 using Enums;
@@ -19,7 +18,9 @@ public class ReviewersController : Controller
 
     public async Task<IActionResult> Index()
     {
-        return RedirectToAction("PendingList");
+        var request = await _service.GetPendingMarketListAsync();
+
+        return View("PendingList", request.Data);
     }
 
     #region Listas 
